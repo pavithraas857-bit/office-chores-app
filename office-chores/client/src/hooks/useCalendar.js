@@ -36,7 +36,10 @@ export function useCalendar(year, month) {
   // Subscribe to server-sent events so chore changes in other tabs trigger a refetch
   useEffect(() => {
     const source = new EventSource('/api/events');
-    source.onmessage = () => { fetchCalendar(); };
+    source.onmessage = (e) => {
+      const { type } = JSON.parse(e.data);
+      if (type === 'chore-changed') fetchCalendar();
+    };
     return () => { source.close(); };
   }, [fetchCalendar]);
 

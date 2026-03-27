@@ -22,6 +22,7 @@ router.post('/', (req, res) => {
     );
     const result = stmt.run(name.trim(), color_hex || '#6366f1');
     const member = db.prepare('SELECT * FROM team_members WHERE id = ?').get(result.lastInsertRowid);
+    req.app.get('broadcast')({ type: 'team-changed' });
     res.status(201).json(member);
   } catch (err) {
     if (err.message.includes('UNIQUE')) {
@@ -51,6 +52,7 @@ router.delete('/:id', (req, res) => {
   if (result.changes === 0) {
     return res.status(404).json({ error: 'Team member not found' });
   }
+  req.app.get('broadcast')({ type: 'team-changed' });
   res.json({ success: true });
 });
 
