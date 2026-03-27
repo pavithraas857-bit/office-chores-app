@@ -43,6 +43,7 @@ router.post('/', (req, res) => {
     FROM chores c JOIN team_members m ON m.id = c.assigned_to
     WHERE c.id = ?
   `).get(result.lastInsertRowid);
+  req.app.get('broadcast')({ type: 'chore-changed' });
   res.status(201).json(formatChore(row));
 });
 
@@ -71,6 +72,7 @@ router.put('/:id', (req, res) => {
     FROM chores c JOIN team_members m ON m.id = c.assigned_to
     WHERE c.id = ?
   `).get(id);
+  req.app.get('broadcast')({ type: 'chore-changed' });
   res.json(formatChore(row));
 });
 
@@ -80,6 +82,7 @@ router.delete('/:id', (req, res) => {
   const id = Number(req.params.id);
   const result = db.prepare('UPDATE chores SET is_active = 0 WHERE id = ? AND is_active = 1').run(id);
   if (result.changes === 0) return res.status(404).json({ error: 'Chore not found' });
+  req.app.get('broadcast')({ type: 'chore-changed' });
   res.json({ success: true });
 });
 
