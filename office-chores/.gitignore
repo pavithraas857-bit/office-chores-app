@@ -1,0 +1,8 @@
+node_modules/
+client/node_modules/
+server/node_modules/
+server/chores.db
+server/chores.db-shm
+server/chores.db-wal
+client/dist/
+.DS_Store
