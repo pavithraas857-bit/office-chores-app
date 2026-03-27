@@ -33,6 +33,13 @@ export function useCalendar(year, month) {
 
   useEffect(() => { fetchCalendar(); }, [fetchCalendar]);
 
+  // Subscribe to server-sent events so chore changes in other tabs trigger a refetch
+  useEffect(() => {
+    const source = new EventSource('/api/events');
+    source.onmessage = () => { fetchCalendar(); };
+    return () => { source.close(); };
+  }, [fetchCalendar]);
+
   // Map: 'YYYY-MM-DD' -> Occurrence[]
   const occurrenceMap = useMemo(() => {
     const map = new Map();
