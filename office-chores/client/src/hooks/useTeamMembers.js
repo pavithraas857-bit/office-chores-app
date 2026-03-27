@@ -21,6 +21,16 @@ export function useTeamMembers() {
 
   useEffect(() => { fetchMembers(); }, [fetchMembers]);
 
+  // Subscribe to server-sent events so team changes in other tabs trigger a refetch
+  useEffect(() => {
+    const source = new EventSource('/api/events');
+    source.onmessage = (e) => {
+      const { type } = JSON.parse(e.data);
+      if (type === 'team-changed') fetchMembers();
+    };
+    return () => { source.close(); };
+  }, [fetchMembers]);
+
   const addMember = useCallback(async (name, colorHex) => {
     const member = await api.addMember(name, colorHex);
     setMembers(prev => [...prev, member].sort((a, b) => a.name.localeCompare(b.name)));
