@@ -12,6 +12,14 @@ function getOccurrencesInRange(chore, rangeStart, rangeEnd) {
 
   if (startMs > rangeEndMs) return occurrences;
 
+  // Single-occurrence chore: only appears on its start_date
+  if (!interval_days || interval_days === 0) {
+    if (startMs >= rangeStartMs && startMs <= rangeEndMs) {
+      occurrences.push(start_date);
+    }
+    return occurrences;
+  }
+
   const intervalMs = interval_days * 86400000;
 
   // Fast-forward cursor to the first occurrence >= rangeStart

@@ -36,7 +36,7 @@ router.post('/', (req, res) => {
     description || '',
     assigned_to,
     start_date,
-    interval_days || 1
+    interval_days != null ? interval_days : 1
   );
   const row = db.prepare(`
     SELECT c.*, m.name AS member_name, m.color_hex AS member_color
@@ -63,7 +63,7 @@ router.put('/:id', (req, res) => {
     description ?? chore.description,
     assigned_to ?? chore.assigned_to,
     start_date ?? chore.start_date,
-    interval_days ?? chore.interval_days,
+    interval_days != null ? interval_days : chore.interval_days,
     id
   );
   const row = db.prepare(`
