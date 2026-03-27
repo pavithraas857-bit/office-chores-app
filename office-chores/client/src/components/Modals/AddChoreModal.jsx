@@ -3,6 +3,7 @@ import { format } from 'date-fns';
 import { Modal } from '../shared/Modal';
 
 const INTERVAL_OPTIONS = [
+  { value: 0, label: 'Does not repeat' },
   { value: 1, label: 'Every day' },
   { value: 2, label: 'Every 2 days' },
   { value: 3, label: 'Every 3 days' },
@@ -21,7 +22,7 @@ export function AddChoreModal({ members, onAdd, onClose, initialChore = null }) 
     initialChore?.startDate || format(new Date(), 'yyyy-MM-dd')
   );
   const [intervalDays, setIntervalDays] = useState(
-    initialChore?.intervalDays?.toString() || '1'
+    initialChore?.intervalDays != null ? initialChore.intervalDays.toString() : '0'
   );
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState('');
@@ -91,7 +92,9 @@ export function AddChoreModal({ members, onAdd, onClose, initialChore = null }) 
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Start Date *</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {Number(intervalDays) === 0 ? 'Date *' : 'Start Date *'}
+            </label>
             <input
               type="date"
               value={startDate}
