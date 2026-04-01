@@ -1,0 +1,8 @@
+name: office-chores-infra
+description: AWS infrastructure for the office-chores app (EC2, Elastic IP, IAM, SSM)
+runtime:
+  name: nodejs
+  options:
+    typescript: true
+config:
+  aws:region: us-east-1
